@@ -186,6 +186,37 @@
   #if defined(USER_VECT_TAB_ADDRESS)
     SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM. */
   #endif /* USER_VECT_TAB_ADDRESS */
+
+    // 1. Habilitar HSE (oscilador externo de 8 MHz)
+    RCC->CR |= RCC_CR_HSEON;
+    while (!(RCC->CR & RCC_CR_HSERDY));
+
+    // 2. Configurar latencia de acceso a FLASH
+    FLASH->ACR |= FLASH_ACR_PRFTBE;        // Prefetch buffer enable
+    FLASH->ACR &= ~FLASH_ACR_LATENCY;
+    FLASH->ACR |= FLASH_ACR_LATENCY_2;     // 2 ciclos de espera para 72 MHz
+
+    // 3. Configurar prescalers de buses
+    RCC->CFGR |= RCC_CFGR_HPRE_DIV1;       // AHB = SYSCLK / 1
+    RCC->CFGR |= RCC_CFGR_PPRE1_DIV2;      // APB1 = HCLK / 2 (máx 36 MHz)
+    RCC->CFGR |= RCC_CFGR_PPRE2_DIV1;      // APB2 = HCLK / 1
+
+    // 4. Configurar PLL: fuente = HSE, multiplicador ×9 → 8 MHz × 9 = 72 MHz
+    RCC->CFGR |= (1 << 16);                // PLLSRC = HSE (bit 16 = 1)
+    RCC->CFGR |= RCC_CFGR_PLLMULL9;        // PLL multiplicador ×9
+
+    // 5. Activar PLL
+    RCC->CR |= RCC_CR_PLLON;
+    while (!(RCC->CR & RCC_CR_PLLRDY));
+
+    // 6. Cambiar fuente de sistema a PLL
+    RCC->CFGR |= RCC_CFGR_SW_PLL;
+    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);
+
+    // 7. Actualizar la variable CMSIS
+    SystemCoreClock = 72000000;
+
+
   }
   
   /**
