@@ -1,3 +1,4 @@
+#define STM32F103xB
 #include "stm32f1xx.h"
 
 volatile int counter = 0;
