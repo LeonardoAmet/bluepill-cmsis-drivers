@@ -2,17 +2,22 @@
 #include "usart.h"
 
 int main(void) {
-    SystemCoreClockUpdate();  // ¡Refresca el valor con seguridad!
+    // Asegurarse que el valor del clock es correcto
+    SystemCoreClockUpdate();
 
+    // Inicializar USART1 con baudrate 9600
     usart_init(USART1, 9600);
-    usart_write_string(USART1, "UART Echo Ready\r\n");
+
+    // Mensaje inicial
+    usart_write_string(USART1, "UART Echo ready @ 9600 baud\r\n");
 
     while (1) {
-        char c = 'A';
-        usart_write_char(USART1, c);
+        // Esperar a recibir un carácter
+        char c = usart_read_char(USART1);
 
-        for (volatile int i = 0; i < 50000; i++); // fix del loop también
+        // Enviar el mismo carácter (echo)
+        usart_write_char(USART1, c);
     }
 }
 
-void _init(void) {}
+void _init(void) {}  // Evita conflictos con newlib
