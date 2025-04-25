@@ -5,11 +5,11 @@ BUILD_DIR = bin
 
 # Rutas base
 COMMON        = ../../common
-CMSIS_DEVICE  = ../../../dev/cmsis-device-f1
-CMSIS_CORE    = ../../../dev/CMSIS_5/CMSIS/Core/Include
+CMSIS_DEVICE  = ../../dev/cmsis-device-f1
+CMSIS_CORE    = ../../dev/CMSIS_5/CMSIS/Core/Include
 
 # Includes
-INCLUDES = -I$(COMMON)
+INCLUDES  = -I$(COMMON)
 INCLUDES += -I$(COMMON)/drivers
 INCLUDES += -I$(CMSIS_DEVICE)/Include
 INCLUDES += -I$(CMSIS_CORE)
