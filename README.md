@@ -76,7 +76,7 @@ make flash
 ### 1. Clonar con submódulos
 
 ```bash
-git clone --recursive https://github.com/leo/bluepill-cmsis-drivers.git
+git clone --recursive https://github.com/LeonardoAmet/bluepill-cmsis-drivers.git
 ```
 
 > Si ya lo clonaste:
