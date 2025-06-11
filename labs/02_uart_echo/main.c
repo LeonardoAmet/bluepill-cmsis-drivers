@@ -15,6 +15,12 @@ int main(void) {
         // Esperar a recibir un carácter
         char c = usart_read_char(USART1);
 
+        if (c == '\r' || c == '\n') {
+            // Si es un retorno de carro o nueva línea, enviar un salto de línea
+            usart_write_char(USART1, '\n');
+            usart_write_char(USART1, '\r');
+        }
+
         // Enviar el mismo carácter (echo)
         usart_write_char(USART1, c);
     }
